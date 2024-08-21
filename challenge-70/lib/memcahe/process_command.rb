@@ -26,18 +26,24 @@ module Memcache
       when :get
         get(request)
       else
-        "ERROR\r\n"
+        # type code here
       end
     end
 
     def self.set(request)
       key = request.key
       @cache[key] = request
+      return "STORED\n" if request.should_reply
     end
 
     def self.get(request)
-      key = request.key
-      @cache[key]
+      response = ""
+      if @cache.key?(request.key)
+        key = request.key
+        value = @cache[key]
+        response = "VALUE #{key} #{value.flags} #{value.byte_count}\n#{value.data_block}\n"
+      end
+      return "#{response}END\n"
     end
 
   end
