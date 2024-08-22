@@ -12,7 +12,8 @@ module Memcache
       @flags = line_one[2]
       @byte_count = line_one[3]
       @should_reply = line_one[4] == "noreply" ? false : true
-      @data_block = lines[1]
+      raise StandardError, "CLIENT_ERROR Byte size exceeds size of provided data block\n" if @byte_count.to_i > lines[1].length
+      @data_block = lines[1].slice(0, @byte_count.to_i)
     end
   end
 end
