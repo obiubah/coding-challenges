@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rspec'
-require_relative '../../../challenge-70/lib/memcahe/request'
+require_relative '../../../challenge-70/lib/memcache/request'
 
 RSpec.describe Memcache::Request do
   let(:command) { "set" }

@@ -25,6 +25,10 @@ module Memcache
         set(request)
       when :get
         get(request)
+      when :add
+        add(request)
+      when :replace
+        replace(request)
       else
         # type code here
       end
@@ -46,5 +50,18 @@ module Memcache
       return "#{response}END\n"
     end
 
+    def self.add(request)
+      if @cache.key?(request.key)
+        return "NOT_STORED\n"
+      end
+      return set(request)
+    end
+
+    def self.replace(request)
+      unless @cache.key?(request.key)
+        return "NOT_STORED\n"
+      end
+      return set(request)
+    end
   end
 end
