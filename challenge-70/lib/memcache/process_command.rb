@@ -8,6 +8,7 @@ module Memcache
     @cache = {}
 
     def self.process_request(request)
+      remove_key_if_expired(request)
       command = request.command
       case command
       when :set
@@ -30,7 +31,6 @@ module Memcache
     end
 
     def self.get(request)
-      remove_key_if_expired(request)
       response = ""
       if @cache.key?(request.key)
         key = request.key
@@ -41,7 +41,6 @@ module Memcache
     end
 
     def self.add(request)
-      remove_key_if_expired(request)
       if @cache.key?(request.key)
         return "NOT_STORED\n"
       end
@@ -49,7 +48,6 @@ module Memcache
     end
 
     def self.replace(request)
-      remove_key_if_expired(request)
       unless @cache.key?(request.key)
         return "NOT_STORED\n"
       end
