@@ -3,6 +3,10 @@
 module Memcache
   class ProcessCommand
 
+    # TODO: 1 - Add support for expiry time to replace and add
+    # TODO: 2 - Add tests to ProcessCommand
+    # TODO: 3 - Add support for concurrent clients (AKA Step 4)
+
     @cache = {}
 
     def self.process_request(request)
