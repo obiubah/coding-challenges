@@ -2,7 +2,7 @@
 
 module Memcache
   class Request
-    attr_reader :command, :key, :flags, :byte_count, :should_reply, :data_block
+    attr_reader :command, :key, :flags, :exptime, :byte_count, :should_reply, :data_block, :request_time
 
     def initialize(data)
       lines = data.split("\n")
@@ -10,9 +10,11 @@ module Memcache
       @command = line_one[0]
       @key = line_one[1]
       @flags = line_one[2]
-      @byte_count = line_one[3]
-      @should_reply = line_one[4] == "noreply" ? false : true
+      @exptime = line_one[3]
+      @byte_count = line_one[4]
+      @should_reply = line_one[5] == "noreply" ? false : true
       raise StandardError, "CLIENT_ERROR Byte size exceeds size of provided data block\n" if @byte_count.to_i > lines[1].length
+      @request_time = Time.now.to_i
       @data_block = lines[1].slice(0, @byte_count.to_i)
     end
   end

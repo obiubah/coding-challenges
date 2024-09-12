@@ -7,19 +7,6 @@ module Memcache
 
     def self.process_request(request)
       command = request.command
-
-      #     "set" means "store this data".
-      #
-      #       "add" means "store this data, but only if the server *doesn't* already
-      # hold data for this key".
-      #
-      #       "replace" means "store this data, but only if the server *does*
-      # already hold data for this key".
-      #
-      #       "append" means "add this data to an existing key after existing data".
-      #
-      #       "prepend" means "add this data to an existing key before existing data".
-
       case command
       when :set
         set(request)
@@ -41,6 +28,7 @@ module Memcache
     end
 
     def self.get(request)
+      remove_key_if_expired(request)
       response = ""
       if @cache.key?(request.key)
         key = request.key
@@ -62,6 +50,17 @@ module Memcache
         return "NOT_STORED\n"
       end
       return set(request)
+    end
+
+    private def self.remove_key_if_expired(request)
+      return unless @cache.key?(request.key)
+      time_to_expire = request.exptime + request.request_time
+      if time_to_expire == request.request_time
+        nil
+      end
+      if time_to_expire < Time.now.to_i
+        @cache.delete(request.key)
+      end
     end
   end
 end
