@@ -2,8 +2,6 @@
 
 module Memcache
   class ProcessCommand
-
-    # TODO: 1 - Add support for expiry time to replace and add
     # TODO: 2 - Add tests to ProcessCommand
     # TODO: 3 - Add support for concurrent clients (AKA Step 4)
 
@@ -43,6 +41,7 @@ module Memcache
     end
 
     def self.add(request)
+      remove_key_if_expired(request)
       if @cache.key?(request.key)
         return "NOT_STORED\n"
       end
@@ -50,6 +49,7 @@ module Memcache
     end
 
     def self.replace(request)
+      remove_key_if_expired(request)
       unless @cache.key?(request.key)
         return "NOT_STORED\n"
       end
