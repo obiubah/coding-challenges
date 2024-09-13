@@ -7,10 +7,11 @@ RSpec.describe Memcache::Request do
   let(:command) { "set" }
   let(:key) { "key" }
   let(:flags) { "0" }
+  let(:exptime) { "20" }
   let(:byte_count) { "7" }
   let(:should_reply) { "" }
   let(:data_block) { "testing" }
-  let(:data) { "#{command} #{key} #{flags} #{byte_count} #{should_reply}\n#{data_block}\n" }
+  let(:data) { "#{command} #{key} #{flags} #{exptime} #{byte_count} #{should_reply}\n#{data_block}\n" }
   let(:request) { described_class.new(data) }
 
   context 'when new instance is created' do
@@ -18,6 +19,7 @@ RSpec.describe Memcache::Request do
       expect(request.command).to eq(command)
       expect(request.key).to eq(key)
       expect(request.flags).to eq(flags)
+      expect(request.exptime).to eq(exptime)
       expect(request.byte_count).to eq(byte_count)
       expect(request.should_reply).to eq(true)
       expect(request.data_block).to eq(data_block)
