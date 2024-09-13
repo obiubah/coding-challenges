@@ -40,7 +40,7 @@ RSpec.describe Memcache::Request do
       end
     end
     context "byte count > bytes in data block" do
-      let(:byte_count) { "11" }
+      let(:byte_count) { "12" }
       it "throws an exception" do
         expect { request }.to raise_error(StandardError, "CLIENT_ERROR Byte size exceeds size of provided data block\n")
       end
