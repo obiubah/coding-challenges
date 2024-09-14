@@ -2,14 +2,11 @@
 
 module Memcache
   class ProcessCommand
-    # TODO: 2 - Add tests to ProcessCommand
-    # TODO: 3 - Add support for concurrent clients (AKA Step 4)
-
     @cache = {}
 
     def self.process_request(request)
       remove_key_if_expired(request)
-      command = request.command
+      command = request.command.to_sym
       case command
       when :set
         set(request)
@@ -54,7 +51,7 @@ module Memcache
       return set(request)
     end
 
-    private def self.remove_key_if_expired(request)
+    def self.remove_key_if_expired(request)
       return unless @cache.key?(request.key)
       time_to_expire = request.exptime + request.request_time
       if time_to_expire == request.request_time
@@ -64,5 +61,7 @@ module Memcache
         @cache.delete(request.key)
       end
     end
+
+    private_class_method :remove_key_if_expired
   end
 end
