@@ -6,14 +6,14 @@ require_relative '../../../challenge-70/lib/memcache/request'
 
 RSpec.describe Memcache::ProcessCommand do
 
-  let(:get_command) { "set" }
+  let(:set_command) { "set" }
   let(:key) { "test" }
   let(:flags) { "0" }
   let(:exptime) { "1" }
   let(:byte_count) { "4" }
   let(:should_reply) { "" }
   let(:data_block) { "test" }
-  let(:get_data) { "#{get_command} #{key} #{flags} #{exptime} #{byte_count} #{should_reply}\n#{data_block}\n" }
+  let(:get_data) { "#{set_command} #{key} #{flags} #{exptime} #{byte_count} #{should_reply}\n#{data_block}\n" }
   let(:get_request) { Memcache::Request.new(get_data) }
   let(:request) { get_request }
   let(:response) { Memcache::ProcessCommand.process_request(request) }
