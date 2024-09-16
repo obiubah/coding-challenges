@@ -53,7 +53,7 @@ module Memcache
 
     def self.remove_key_if_expired(request)
       return unless @cache.key?(request.key)
-      time_to_expire = request.exptime + request.request_time
+      time_to_expire = @cache[request.key].exptime + request.request_time
       if time_to_expire == request.request_time
         nil
       end
