@@ -19,39 +19,6 @@ RSpec.describe Memcache::ProcessCommand do
   let(:request) {}
   let(:response) { Memcache::ProcessCommand.process_request(request) }
 
-=begin
-REQUEST 2
-get test
-RESPONSE 2
-END
-
-REQUEST 3
-set test 0 100 4
-test
-RESPONSE 3
-STORED
-
-REQUEST 4
-get test
-RESPONSE 4
-VALUE test 0 4
-test
-END
-
-REQUEST 5
-set test 0 -1 4
-test
-RESPONSE 5
-STORED
-
-REQUEST 6
-get test
-
-RESPONSE 6
-END
-
-=end
-
   context 'when the command is SET' do
     let(:request) { set_request }
     it 'succeeds' do
@@ -70,6 +37,15 @@ END
       end
       it 'returns the data' do
         expect(response).to eq("VALUE test 0 4\ntest\nEND\n")
+      end
+      context 'when the data has expired' do
+        # TODO: This test is not working as expected. The data is not expiring.
+        let(:exptime) { 0 }
+        let(:key) { "expired" }
+        it 'returns empty' do
+          sleep(10)
+          expect(response).to eq("END\n")
+        end
       end
     end
   end
