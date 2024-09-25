@@ -40,10 +40,12 @@ RSpec.describe Memcache::ProcessCommand do
       end
       context 'when the data has expired' do
         # TODO: This test is not working as expected. The data is not expiring.
-        let(:exptime) { 0 }
+        let(:exptime) { 5 }
         let(:key) { "expired" }
         it 'returns empty' do
-          sleep(10)
+          allow(Time).to receive(:now).and_return(Time.now + exptime.to_i + 1)
+          puts Time.now
+          puts exptime.to_i
           expect(response).to eq("END\n")
         end
       end
